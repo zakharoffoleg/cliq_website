@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<link href='style.css' rel='stylesheet' type='text/css'>
+<link href="https://fonts.googleapis.com/css?family=Catamaran|Montserrat|Raleway" rel="stylesheet">
+</head>
+
+<body>
+	<div class="header">
+		<a class="button" href="main_page.html"><p class="header_text">cliq</p></a>
+	</div>
+
+	<div class="body">
+		<div class="images">
+		<img src="scissors.png" class="roleIcon">
+		<img src="man_hair.jpg" class="roleIcon">
+		<p class="body-text">Choose your way</p>
+		</div>
+		<div class="login-register-div">
+			<div class="login">
+				<fieldset>
+				<legend>Register</legend>
+				<p id="errorMsg"></p>
+				<form>
+				Your email:<br>
+				<input type="text" id="emailField"><br>
+				Your password:<br>
+				<input type="password" id="passwordField"><br>
+				<button type="button" id="login-btn" onclick="register()">Register</button>
+				</form>
+				</fieldset>
+			</div>
+			<p id="login-text">Already a member? Login!</p>
+			<a class="button" href="login.html"><button type="button" id="register-btn">Login</button></a>
+		</div>
+	</div>
+	
+	<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+	    apiKey: "AIzaSyBdIXFrYWXvQhMCqb8KXhJf9BNwOotQLY4",
+	    authDomain: "cliq-1a666.firebaseapp.com",
+	    databaseURL: "https://cliq-1a666.firebaseio.com",
+	    projectId: "cliq-1a666",
+	    storageBucket: "cliq-1a666.appspot.com",
+	    messagingSenderId: "691456444516"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+	<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
+	<script src="main.js"></script>
+</body>
+</html>
