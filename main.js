@@ -2,19 +2,19 @@ var emailField = document.getElementById("emailField")
 var passwordField = document.getElementById("passwordField")
 var isBarber = null
 
-//console.log(firebase.auth().currentUser.uid)
-
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
+  	$('#signOutBtn').show()
     // redirect to UI
   } else {
+  	$('#signOutBtn').hide()
   	// show login form
   }
 });
 
 function main() {
 	$('#register-btn').on('click', function() {
-		// redirect to registration page
+		window.location.replace('register.html')
 	})
 
 	$('.roleIcon').on('click', function() {
@@ -33,10 +33,8 @@ function main() {
 			$(this).css('border-bottom', '2px solid #F88B30');
 		} else {
 			$(this).css('border-bottom', '2px solid #F88B30')
-		}
-		
+		}	
 	})
-
 }
 
 function login() {
@@ -53,10 +51,20 @@ function login() {
 
 		//turn on the sign in animation
 		
-		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		firebase.auth().signInWithEmailAndPassword(email, password).then(function(user) {
+
+			$('#errorMsg').hide();
+
+			//redirect to UI
+			window.location.replace('main_page.html')
+			
+		}), function(error) {
 			$('#errorMsg').show();
 			$('#errorMsg').text(error.message);
-		})
+		}
+	} else {
+		$('#errorMsg').show();
+		$('#errorMsg').text('Email or password field is empty');
 	}
 }
 
@@ -83,29 +91,39 @@ function register() {
 					userPassword: password,
 					userIsBarber: isBarber
 				})
+
+				$('#errorMsg').hide();
+
+				//redirect to UI
+				window.location.replace('main_page.html')
+
 			}, function(error) {
   				$('#errorMsg').show();
   				$('#errorMsg').text(error.message);
 			});			
 		} else {
-			alert('Email or password fields are empty')
+			$('#errorMsg').show();
+  			$('#errorMsg').text('Email or password fields are empty');
 		}
 	} else {
-		alert('Select your role')
+		$('#errorMsg').show();
+  		$('#errorMsg').text('Select your role');
 	}
 }
 
 
 function signOut() {
 	firebase.auth().signOut().then(function() {
-	  alert('signed out')
+
+	  //redirect to main page
+	  window.location.replace('main_page.html')
+
 	}).catch(function(error) {
 	  alert(error.message)
 	});
 }
 
 function animateIcon(){
-	//$('.roleIcon').className = "selectedIcon"
 	$('.roleIcon').css('border-bottom', '2px solid #F88B30')
 }
 

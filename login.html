@@ -8,7 +8,8 @@
 
 <body>
 	<div class="header">
-		<a class="button" href="main_page.html"><p class="header_text">cliq</p></a>
+		<p class="header_text"><a class="button" href="main_page.html">cliq</a>
+		<button id="signOutBtn" onclick="signOut()">Sign out</button></p>
 	</div>
 
 	<div class="body">
@@ -45,6 +46,7 @@
 	  firebase.initializeApp(config);
 	</script>
 
+	<script type="text/javascript" src="sha256.js"></script>
 	<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
 	<script src="main.js"></script>
 </body>

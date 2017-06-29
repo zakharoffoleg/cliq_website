@@ -8,17 +8,30 @@
 }
 
 .header_text {
+	display: block;
 	padding-top: 0px;
 	font-size: 45px;
 	font-weight: bolder;
 	color: #F88B30;
 	font-family: 'Catamaran', Arial, serif;
 	text-align: center;
-	display: block;
-    -webkit-margin-before: 0em;
-    -webkit-margin-after: 0em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
+    margin: 0;
+}
+
+#signOutBtn {
+	display: none;
+	float: right;
+	margin: auto;
+	font-family: 'Catamaran', Arial, serif;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	border-color: #F88B30;
+	border-radius: 10px;
+	border-style: solid;
+	background-color: #FFF;
+	color: #F88B30;
+	margin-top: 15px;
 }
 
 
