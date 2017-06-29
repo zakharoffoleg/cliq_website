@@ -1,6 +1,8 @@
 var emailField = document.getElementById("emailField")
 var passwordField = document.getElementById("passwordField")
-var isBarber = false
+var isBarber = null
+
+//console.log(firebase.auth().currentUser.uid)
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -41,8 +43,11 @@ function login() {
 
 	var firebaseRef = firebase.database().ref();
 
+	var shaObj = new jsSHA("SHA-256", "TEXT")
+	shaObj.update(passwordField.value)
+	
 	var email = emailField.value
-	var password = passwordField.value
+	var password = shaObj.getHash("HEX")
 
 	if (email != "" && password != "") {
 
@@ -59,26 +64,29 @@ function register() {
 
 	var firebaseRef = firebase.database().ref();
 
+	var shaObj = new jsSHA("SHA-256", "TEXT")
+	shaObj.update(passwordField.value)
+
 	var email = emailField.value
-	var password = passwordField.value
+	var password = shaObj.getHash("HEX")
 
 	if (isBarber != null) {
 
 		if (email != "" && password != "") {
 
-			firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-			$('#errorMsg').show();
-			$('#errorMsg').text(error.message);
+			firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
 
-			var user = firebase.auth().currentUser;
-			var userID = user.uid;
+				var userID = user.uid;
 
-			firebase.database().ref('users/' + userID).set({
-				email: email,
-				password: password,
-				isBarber: isBarber
-			})
-		})
+  				firebase.database().ref('users/' + userID).set({
+					userEmail: email,
+					userPassword: password,
+					userIsBarber: isBarber
+				})
+			}, function(error) {
+  				$('#errorMsg').show();
+  				$('#errorMsg').text(error.message);
+			});			
 		} else {
 			alert('Email or password fields are empty')
 		}
@@ -86,6 +94,7 @@ function register() {
 		alert('Select your role')
 	}
 }
+
 
 function signOut() {
 	firebase.auth().signOut().then(function() {
