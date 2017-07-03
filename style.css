@@ -181,3 +181,36 @@ form {
 	margin-left: 10%;
 	width: 35%;
 }
+
+#callCliqBtn {
+	display: block;
+	margin: auto;
+	width: 20%;
+	font-family: 'Catamaran', Arial, serif;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-top: 10px;
+	display: block;
+	border-color: #F88B30;
+	border-radius: 10px;
+	border-style: solid;
+	background-color: #FFF;
+	color: #F88B30;
+}
+
+#map {
+	display: block;
+	margin: auto;
+	margin-top: 1em;
+	width: 60%;
+	height: 35em;
+	border: 2px solid #F88B30;
+}
+
+#mapForm {
+	width: 20%;
+	display: block;
+	margin: auto;
+	margin-top: 1em;
+}

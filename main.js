@@ -35,6 +35,10 @@ function main() {
 			$(this).css('border-bottom', '2px solid #F88B30')
 		}	
 	})
+
+	$(document).on('storage', function() {
+		console.log('storage triggered')
+	})
 }
 
 function login() {
@@ -121,6 +125,23 @@ function signOut() {
 	}).catch(function(error) {
 	  alert(error.message)
 	});
+}
+
+function saveOrigin() {
+
+	var originTextField = document.getElementById("originTextField")
+	var origin_input = originTextField.value
+
+	var origin = origin_input.replace(/ /g, "+")
+	console.log(origin)
+
+	localStorage.setItem('origin', origin)
+
+	$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + origin + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
 }
 
 function animateIcon(){
