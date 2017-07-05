@@ -128,7 +128,7 @@ form {
 	display: block;
 }
 
-#register-btn {
+.redirectBtn {
 	display: block;
 	margin: auto;
 	width: 20%;

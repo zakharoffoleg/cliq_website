@@ -13,8 +13,36 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 function main() {
-	$('#register-btn').on('click', function() {
-		window.location.replace('register.html')
+
+	$('.redirectBtn').on('click', function() {
+		if ($(this).attr('id') === 'registerRedirectBtn') {
+			window.location.replace('register.html')
+		} else if ($(this).attr('id') === 'loginRedirectBtn') {
+			window.location.replace('login.html')
+		} else {
+			//wrong button id
+			console.log('error')
+		}
+		
+	})
+
+	$('#getStartedBtn').on('click', function() {
+
+		if (firebase.auth().currentUser) {
+
+			var userID = firebase.auth().currentUser.uid
+
+			firebase.database().ref('/users/' + userID).once('value').then(function(snapshot) {
+  				if (snapshot.val().userIsBarber === true) {
+  					window.location.replace('barber_map.html')
+  				} else {
+  					window.location.replace('map.html')
+  				}
+			});
+
+		} else {
+			window.location.replace('login.html')
+		}
 	})
 
 	$('.roleIcon').on('click', function() {
@@ -34,10 +62,6 @@ function main() {
 		} else {
 			$(this).css('border-bottom', '2px solid #F88B30')
 		}	
-	})
-
-	$(document).on('storage', function() {
-		console.log('storage triggered')
 	})
 }
 
@@ -62,10 +86,10 @@ function login() {
 			//redirect to UI
 			window.location.replace('main_page.html')
 			
-		}), function(error) {
+		}, function(error) {
 			$('#errorMsg').show();
 			$('#errorMsg').text(error.message);
-		}
+		})
 	} else {
 		$('#errorMsg').show();
 		$('#errorMsg').text('Email or password field is empty');
@@ -127,6 +151,28 @@ function signOut() {
 	});
 }
 
+function map() {
+
+	var User = firebase.auth().currentUser
+	var mapCheck = window.location.pathname.split('/')
+
+	if (User) {
+
+		if (mapCheck[mapCheck.length - 1] === 'map.html') {
+
+		var userID = firebase.auth().currentUser.uid
+
+		firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
+			
+			var currentLocation = getVal.val().origin
+			$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + currentLocation + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
+
+		})
+
+		}
+	}
+}
+
 function saveOrigin() {
 
 	var originTextField = document.getElementById("originTextField")
@@ -135,9 +181,30 @@ function saveOrigin() {
 	var origin = origin_input.replace(/ /g, "+")
 	console.log(origin)
 
-	localStorage.setItem('origin', origin)
+	//localStorage.setItem('origin', origin)
 
 	$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + origin + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
+
+	var userID = firebase.auth().currentUser.uid;
+
+    firebase.database().ref('users/' + userID).update({
+    	origin: origin
+  	})
+}
+
+function saveLocation() {
+
+	var locationTextField = document.getElementById("originTextField")
+	var locationInput = locationTextField.value
+
+	var location = locationInput.replace(/ /g, "+")
+	console.log(location)
+
+	var userID = firebase.auth().currentUser.uid;
+
+    firebase.database().ref('users/' + userID).update({
+    	location: location
+  	})
 }
 
 function replaceAll(str, find, replace) {
