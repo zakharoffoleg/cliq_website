@@ -12,7 +12,22 @@ firebase.auth().onAuthStateChanged(function(user) {
   }
 });
 
+
 function main() {
+
+	
+	firebase.database().ref('requests/').on('value', function(snapshot) {	
+
+		var userID = firebase.auth().currentUser.uid
+
+		firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
+			var readyStatus = getVal.val().isReady
+			if (readyStatus) {
+				console.log(readyStatus)
+				var conf = confirm('Client has been found. Accept request?')
+			}
+		})
+	})
 
 	$('.redirectBtn').on('click', function() {
 		if ($(this).attr('id') === 'registerRedirectBtn') {
@@ -163,7 +178,6 @@ function map() {
 		var userID = firebase.auth().currentUser.uid
 
 		firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
-			
 			var currentLocation = getVal.val().origin
 			$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + currentLocation + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
 
@@ -171,6 +185,49 @@ function map() {
 
 		}
 	}
+}
+
+function isReady() {
+
+	var userID = firebase.auth().currentUser.uid
+
+	firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
+
+		var readyStatus = getVal.val().isReady
+		//console.log(readyStatus)
+		
+		
+		if (!readyStatus) {
+
+			var confActivate = confirm('Are you ready for Cliq?')
+			//console.log(confActivate)
+
+			if (confActivate) {
+
+				firebase.database().ref('users/' + userID).update({
+	    			isReady: true
+				})
+
+				readyStatus = true
+
+				$('#callCliqBtn').text('Stop Cliq')
+			}
+		} else {
+
+			var confDeactivate = confirm('Done cliqing?')
+			if (confDeactivate) {
+
+				firebase.database().ref('users/' + userID).update({
+	    			isReady: false
+				})
+				readyStatus = false
+				confActivate = false
+				$('#callCliqBtn').text('Find Cliq')
+			}
+			//console.log(confActivate)
+			//console.log(readyStatus)
+		}
+  	})
 }
 
 function saveOrigin() {
@@ -185,11 +242,23 @@ function saveOrigin() {
 
 	$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + origin + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
 
-	var userID = firebase.auth().currentUser.uid;
+	/*var userID = firebase.auth().currentUser.uid;
 
     firebase.database().ref('users/' + userID).update({
-    	origin: origin
-  	})
+     origin: origin
+   })*/
+
+   // send cliq request to database
+
+   var requestRef = firebase.database().ref('requests/').push({
+
+    // some request attributes
+
+    isAccepted: false,
+    isFinished: false,
+    clientLocation: origin,
+    requestTime: new Date()
+   })
 }
 
 function saveLocation() {
@@ -198,7 +267,7 @@ function saveLocation() {
 	var locationInput = locationTextField.value
 
 	var location = locationInput.replace(/ /g, "+")
-	console.log(location)
+	//console.log(location)
 
 	var userID = firebase.auth().currentUser.uid;
 
