@@ -182,7 +182,7 @@ form {
 	width: 35%;
 }
 
-#callCliqBtn {
+#searchCliqBtn {
 	display: block;
 	margin: auto;
 	width: 20%;
@@ -198,6 +198,40 @@ form {
 	background-color: #FFF;
 	color: #F88B30;
 }
+
+#finishCliqBtn {
+	margin: auto;
+	margin-left: 29.85%;
+	width: 20%;
+	font-family: 'Catamaran', Arial, serif;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-top: 10px;
+	display: inline-block;
+	border-color: #F88B30;
+	border-radius: 10px;
+	border-style: solid;
+	background-color: #FFF;
+	color: #F88B30;
+}
+
+#cancelCliqBtn {
+	margin: auto;
+	width: 20%;
+	font-family: 'Catamaran', Arial, serif;
+	font-size: 20px;
+	font-weight: bold;
+	text-transform: uppercase;
+	margin-top: 10px;
+	display: inline-block;
+	border-color: #F88B30;
+	border-radius: 10px;
+	border-style: solid;
+	background-color: #FFF;
+	color: #F88B30;
+}
+
 
 #map {
 	display: block;

@@ -2,7 +2,7 @@
 
 <html>
 <head>
-<link href='style.css' rel='stylesheet' type='text/css'>
+<link href='../css/style.css' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Catamaran|Montserrat|Raleway" rel="stylesheet">
 </head>
 
@@ -13,22 +13,27 @@
 	</div>
 
 	<div class="body">
+		<div class="images">
+		<img src="../img/scissors.png" class="roleIcon">
+		<img src="../img/man_hair.jpg" class="roleIcon">
+		<p id="registerText">Choose your way</p>
+		</div>
 		<div class="login-register-div">
 			<div class="login">
 				<fieldset>
-				<legend>Login</legend>
+				<legend>Register</legend>
 				<p id="errorMsg"></p>
 				<form>
 				Your email:<br>
 				<input type="text" id="emailField"><br>
 				Your password:<br>
 				<input type="password" id="passwordField"><br>
-				<button type="button" id="login-btn" onclick="login()">Login</button>
+				<button type="button" id="login-btn" onclick="register()">Register</button>
 				</form>
 				</fieldset>
 			</div>
-			<p id="login-text">Not a member yet? Register!</p>
-			<button type="button" class="redirectBtn" id="registerRedirectBtn">Register</button>
+			<p id="login-text">Already a member? Login!</p>
+			<button type="button" class="redirectBtn" id="loginRedirectBtn">Login</button>
 		</div>
 	</div>
 	
@@ -46,8 +51,8 @@
 	  firebase.initializeApp(config);
 	</script>
 
-	<script type="text/javascript" src="sha256.js"></script>
+	<script type="text/javascript" src="../js/sha256.js"></script>
 	<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
-	<script src="main.js"></script>
+	<script src="../js/main.js"></script>
 </body>
 </html>

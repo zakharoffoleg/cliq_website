@@ -15,17 +15,47 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 function main() {
 
-	
+	// autodelete finished requests
+
+	firebase.database().ref('requests/').on('value', function(snapshot) {
+
+		for (var i in snapshot.val()) {
+	   		if (snapshot.val()[i].isFinished || snapshot.val()[i].isCanceled) {
+	    		firebase.database().ref('requests/' + i).remove()
+	    		console.log(i)
+	   		}
+	  	} 
+	})
+
+
 	firebase.database().ref('requests/').on('value', function(snapshot) {	
 
 		var userID = firebase.auth().currentUser.uid
-
 		firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
 			var readyStatus = getVal.val().isReady
+			var busyStatus = getVal.val().isBusy
 			if (readyStatus) {
-				console.log(readyStatus)
-				var conf = confirm('Client has been found. Accept request?')
-			}
+				console.log(busyStatus)
+				if (!busyStatus) {
+					//console.log(readyStatus)
+					//console.log(snapshot.val())
+					for (var i in snapshot.val()) {
+						if (!snapshot.val()[i].isAccepted) {
+							var conf = confirm('Client has been found at ' + snapshot.val()[i].clientLocation)
+							if (conf) {
+								firebase.database().ref('requests/' + i).update({
+		    						isAccepted: true,
+		    						barberID: userID
+								})
+								firebase.database().ref('users/' + userID).update({
+									isBusy: true
+								})
+								break;
+							}
+						}
+					}
+				}	
+			}	
 		})
 	})
 
@@ -48,7 +78,7 @@ function main() {
 			var userID = firebase.auth().currentUser.uid
 
 			firebase.database().ref('/users/' + userID).once('value').then(function(snapshot) {
-  				if (snapshot.val().userIsBarber === true) {
+  				if (snapshot.val().isBarber === true) {
   					window.location.replace('barber_map.html')
   				} else {
   					window.location.replace('map.html')
@@ -79,6 +109,7 @@ function main() {
 		}	
 	})
 }
+
 
 function login() {
 
@@ -111,6 +142,7 @@ function login() {
 	}
 }
 
+
 function register() {
 
 	var firebaseRef = firebase.database().ref();
@@ -128,13 +160,20 @@ function register() {
 			firebase.auth().createUserWithEmailAndPassword(email, password).then(function(user) {
 
 				var userID = user.uid;
-
+				/*
   				firebase.database().ref('users/' + userID).set({
-					userEmail: email,
-					userPassword: password,
-					userIsBarber: isBarber
+					email: email,
+					password: password,
+					isBarber: isBarber
 				})
-
+				*/
+				firebase.database().ref('users/' + userID).set({
+					email: email,
+					password: password,
+					isBarber: isBarber,
+					isBusy: false,
+				})
+  				
 				$('#errorMsg').hide();
 
 				//redirect to UI
@@ -166,101 +205,7 @@ function signOut() {
 	});
 }
 
-function map() {
-
-	var User = firebase.auth().currentUser
-	var mapCheck = window.location.pathname.split('/')
-
-	if (User) {
-
-		if (mapCheck[mapCheck.length - 1] === 'map.html') {
-
-		var userID = firebase.auth().currentUser.uid
-
-		firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
-			var currentLocation = getVal.val().origin
-			$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + currentLocation + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
-
-		})
-
-		}
-	}
-}
-
-function isReady() {
-
-	var userID = firebase.auth().currentUser.uid
-
-	firebase.database().ref('/users/' + userID).once('value').then(function(getVal) {
-
-		var readyStatus = getVal.val().isReady
-		//console.log(readyStatus)
-		
-		
-		if (!readyStatus) {
-
-			var confActivate = confirm('Are you ready for Cliq?')
-			//console.log(confActivate)
-
-			if (confActivate) {
-
-				firebase.database().ref('users/' + userID).update({
-	    			isReady: true
-				})
-
-				readyStatus = true
-
-				$('#callCliqBtn').text('Stop Cliq')
-			}
-		} else {
-
-			var confDeactivate = confirm('Done cliqing?')
-			if (confDeactivate) {
-
-				firebase.database().ref('users/' + userID).update({
-	    			isReady: false
-				})
-				readyStatus = false
-				confActivate = false
-				$('#callCliqBtn').text('Find Cliq')
-			}
-			//console.log(confActivate)
-			//console.log(readyStatus)
-		}
-  	})
-}
-
-function saveOrigin() {
-
-	var originTextField = document.getElementById("originTextField")
-	var origin_input = originTextField.value
-
-	var origin = origin_input.replace(/ /g, "+")
-	console.log(origin)
-
-	//localStorage.setItem('origin', origin)
-
-	$('#map').attr('src', 'https://www.google.com/maps/embed/v1/directions?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=' + origin + '&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways')
-
-	/*var userID = firebase.auth().currentUser.uid;
-
-    firebase.database().ref('users/' + userID).update({
-     origin: origin
-   })*/
-
-   // send cliq request to database
-
-   var requestRef = firebase.database().ref('requests/').push({
-
-    // some request attributes
-
-    isAccepted: false,
-    isFinished: false,
-    clientLocation: origin,
-    requestTime: new Date()
-   })
-}
-
+/*
 function saveLocation() {
 
 	var locationTextField = document.getElementById("originTextField")
@@ -275,6 +220,7 @@ function saveLocation() {
     	location: location
   	})
 }
+*/
 
 function replaceAll(str, find, replace) {
     return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);

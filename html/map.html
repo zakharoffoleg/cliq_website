@@ -2,11 +2,11 @@
 
 <html>
 <head>
-<link href='style.css' rel='stylesheet' type='text/css'>
+<link href='../css/style.css' rel='stylesheet' type='text/css'>
 <link href="https://fonts.googleapis.com/css?family=Catamaran|Montserrat|Raleway" rel="stylesheet">
 </head>
 
-<body>
+<body onload='map()'>
 	<div class="header">
 		<p class="header_text"><a class="button" href="main_page.html">cliq</a>
 		<button id="signOutBtn" onclick="signOut()">Sign out</button></p>
@@ -15,10 +15,16 @@
 	<div class="body">
 
 		<form id="mapForm">
-		Enter your current location:
+		Enter your adress:
 		<input type="text" id="originTextField">
 		</form>
-		<button id="callCliqBtn" onclick="saveLocation(), isReady()">Find Cliq</button>
+		<button id="callCliqBtn" onclick="saveOrigin()">Call Cliq</button>
+
+		<iframe id="map" target="_parent" src="https://www.google.com/maps/embed/v1/directions
+			?key=AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI&origin=Oslo&destination=Helsinki&mode=transit&avoid=ferries|tolls|highways" allowfullscreen>
+		</iframe>
+		<p>AIzaSyB0ZdKM6SiqkeKI9PyYeVr_WwX0IBlXkCI</p>
+
 
 	</div>
 	
@@ -35,9 +41,9 @@
 	  };
 	  firebase.initializeApp(config);
 	</script>
-
-	<script type="text/javascript" src="sha256.js"></script>
+	
 	<script src='https://code.jquery.com/jquery-3.1.0.min.js'></script>
-	<script src="main.js"></script>
+	<script src="../js/main.js"></script>
+	<script src="../js/client.js"></script>
 </body>
 </html>
